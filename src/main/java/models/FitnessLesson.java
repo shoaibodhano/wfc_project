@@ -1,6 +1,7 @@
 package models;
 
 import java.util.List;
+import java.util.Objects;
 
 public class FitnessLesson {
 
@@ -30,5 +31,19 @@ public class FitnessLesson {
 
     public boolean isOpenOn(BookingDay bookingDay){
         return daysOpen.contains(bookingDay);
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FitnessLesson that = (FitnessLesson) o;
+        return name.equals(that.name) && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, type);
     }
 }
