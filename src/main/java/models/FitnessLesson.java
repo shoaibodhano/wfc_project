@@ -22,10 +22,9 @@ public class FitnessLesson {
 
     @Override
     public String toString() {
-        return "name: " + name + '\n' +
-                "type: " + type + '\n' +
-                "price: " + price + '\n' +
-                "daysOpen: " + daysOpen + '\n';
+        return  name + " (" + type + ")\n" +
+                "Fees: Rs." + price + '\n' +
+                "Open: " + daysOpen + '\n';
     }
 
 

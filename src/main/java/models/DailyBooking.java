@@ -28,4 +28,9 @@ public class DailyBooking {
     public String toString() {
         return lesson.name+" ("+lesson.type + ") on " + bookingDay + " - "+bookingWeek;
     }
+
+    public String getReport(){
+
+        return customer.name+" - "+lesson.name+" ("+lesson.type + ") @Rs."+lesson.price;
+    }
 }
