@@ -13,6 +13,7 @@ import static models.BookingWeek.*;
 public class WFCApp {
 
     static ArrayList<DailyBooking> bookings = new ArrayList<>();
+    static ArrayList<DailyBooking> userBookings = new ArrayList<>();
     static ArrayList<Customer> customers = new ArrayList<>();
     static Customer currentUser;
 
@@ -20,7 +21,6 @@ public class WFCApp {
     static ArrayList<FitnessLesson> filteredLessons = new ArrayList<>();
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
         initData();
 
         int choice;
@@ -30,8 +30,8 @@ public class WFCApp {
             System.out.println("Select Your Choice:");
 
             System.out.println("1. Login");
-            System.out.println("2. Print Report");
-            System.out.println("3. Exit");
+//            System.out.println("2. Print Report");
+            System.out.println("0. Exit");
             choice = getChoice();
 //            choice = 1;
 
@@ -42,9 +42,9 @@ public class WFCApp {
                 if (login(phone)){
                     start();
                 }
-            } else if (choice==2){
-                printReport();
-            } else if (choice==3){
+//            } else if (choice==2){
+//                printReport();
+            } else if (choice==0){
                 System.exit(0);
             } else {
                 System.out.println("Invalid Choice\n");
@@ -56,7 +56,7 @@ public class WFCApp {
         try {
             return new Scanner(System.in).nextInt();
         }catch (Exception e){
-            return  0;
+            return  -1;
         }
     }
 
@@ -78,19 +78,23 @@ public class WFCApp {
         System.out.println("Hello "+currentUser.name+" !");
         System.out.println("─────────────[ Welcome to Weekend Fitness Club ]─────────────");
 
-        int choice = 0;
+        int choice = -1;
 
-        while(choice!=3) {
+        while(choice!=0) {
             System.out.println("\nSelect Your Choice:");
 
-            System.out.println("1. Book a Lesson");
-            System.out.println("2. My Bookings");
-            System.out.println("3. Logout");
+            System.out.println("1. Book a group fitness lesson");
+//            System.out.println("2. My Bookings");
+            System.out.println("2. Change/Cancel a booking");
+            System.out.println("3. Attend a lesson");
+            System.out.println("4. Monthly lesson report");
+//            System.out.println("5. Monthly champion fitness type report");
+            System.out.println("0. Logout");
 
             choice = getChoice();
 
             switch (choice){
-                case 1:
+                case 1: // Book a group fitness lesson
                     System.out.println("View Available Lessons:");
                     System.out.println("1. By Date");
                     System.out.println("2. By FitnessType");
@@ -124,9 +128,24 @@ public class WFCApp {
                     }
 
                     break;
-                case 2:
+                case 2: // Change/Cancel a booking
                     viewUserBookings(currentUser);
+                    System.out.println("Change/Cancel a booking");
+                    for (int i = 0; i < userBookings.size() ; i++) {
+                        System.out.println((i+1)+". "+userBookings.get(i));
+                    }
                     break;
+                case 3: // Attend a Lesson
+                    viewUserBookings(currentUser);
+                    System.out.println("Attend a Lesson");
+                    for (DailyBooking b : userBookings) {
+                        System.out.println(b);
+                    }
+                    break;
+                case 4: //Monthly lesson report
+                    printReport();
+                    break;
+                case 0: break; // logout
                 default:
                     System.out.println("Invalid Choice\n");
 
@@ -298,10 +317,10 @@ public class WFCApp {
     }
 
     static void viewUserBookings(Customer customer){
-        System.out.println("My Bookings:");
+        userBookings.clear();
         for (DailyBooking b:bookings) {
             if(b.customer.phone.equals(customer.phone)){
-                System.out.println(b);
+                userBookings.add(b);
             }
         }
     }
@@ -316,7 +335,7 @@ public class WFCApp {
         lessons.add(new FitnessLesson(FitnessType.YOGA,"Lesson-5", 270, new ArrayList<>(Arrays.asList(Saturday, Sunday))));
         lessons.add(new FitnessLesson(FitnessType.SPIN,"Lesson-6", 270, new ArrayList<>(Arrays.asList(Saturday, Sunday))));
         lessons.add(new FitnessLesson(FitnessType.ZUMBA,"Lesson-7", 2000, new ArrayList<>(Arrays.asList(Saturday, Sunday))));
-        lessons.add(new FitnessLesson(FitnessType.ZUMBA,"Lesson-8", 2000, new ArrayList<>(Arrays.asList(Saturday, Sunday))));
+        lessons.add(new FitnessLesson(FitnessType.AQUACISE,"Lesson-8", 2000, new ArrayList<>(Arrays.asList(Saturday, Sunday))));
 
         customers.add(new Customer("Shoaib", "Hyderabad", "03123934654", 71, 25));
         customers.add(new Customer("Amjad", "Hyderabad", "03000838330", 68, 27));

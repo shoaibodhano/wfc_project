@@ -26,11 +26,10 @@ public class DailyBooking {
 
     @Override
     public String toString() {
-        return lesson.name+" ("+lesson.type + ") on " + bookingDay + " - "+bookingWeek;
+        return lesson.name + " [" + lesson.type + "] on (" + bookingDay + "/" + bookingWeek + ") - " + (attended ? "Attended" : "Not Attended");
     }
 
     public String getReport(){
-
         return customer.name+" - "+lesson.name+" ("+lesson.type + ") @Rs."+lesson.price;
     }
 }
