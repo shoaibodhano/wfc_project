@@ -21,7 +21,7 @@ public class Rating {
             case 4: satisfaction = "Satisfied"; break;
             case 5: satisfaction = "Very Satisfied"; break;
         }
-        return  customer.name + " is " + satisfaction + " with " + lesson.type;
+        return  customer.getName()+ " is " + satisfaction + " with " + lesson.getType();
     }
 
 

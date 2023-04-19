@@ -5,25 +5,39 @@ import java.util.Objects;
 
 public class FitnessLesson {
 
-    public final String name;
-    public final FitnessType type;
-    public final int price;
+    private final String name;
+    private final FitnessType type;
     private final List<BookingDay> daysOpen;
 
 
-    public FitnessLesson(FitnessType type, String name, int price, List<BookingDay> daysOpen) {
+    public FitnessLesson(FitnessType type, String name, List<BookingDay> daysOpen) {
         this.daysOpen = daysOpen;
         this.type = type;
         this.name = name;
-        this.price = price;
+
     }
 
 
+    public String getName() {
+        return name;
+    }
+
+    public FitnessType getType() {
+        return type;
+    }
+
+    public int getPrice() {
+        return type.price;
+    }
+
+    public List<BookingDay> getDaysOpen() {
+        return daysOpen;
+    }
 
     @Override
     public String toString() {
-        return  name + " (" + type + ")\n" +
-                "Fees: Rs." + price + '\n' +
+        return  name + " [" + type + "]\n" +
+                "Fees: Rs." + getPrice() + '\n' +
                 "Open: " + daysOpen + '\n';
     }
 

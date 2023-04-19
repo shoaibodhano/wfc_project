@@ -2,10 +2,10 @@ package models;
 
 public class DailyBooking {
 
-    public final BookingDay bookingDay;
-    public final BookingWeek bookingWeek;
-    public final FitnessLesson lesson;
-    public final Customer customer;
+    private final BookingDay bookingDay;
+    private final BookingWeek bookingWeek;
+    private final FitnessLesson lesson;
+    private final Customer customer;
     private boolean attended;
 
     public DailyBooking(BookingDay bookingDay, BookingWeek bookingWeek, FitnessLesson lesson, Customer customer) {
@@ -26,10 +26,26 @@ public class DailyBooking {
 
     @Override
     public String toString() {
-        return lesson.name + " [" + lesson.type + "] on (" + bookingDay + "/" + bookingWeek + ") - " + (attended ? "Attended" : "Not Attended");
+        return lesson.getName() + " [" + lesson.getType() + "] on (" + bookingDay + "/" + bookingWeek + ") - " + (attended ? "Attended" : "Not Attended");
     }
 
     public String getReport(){
-        return customer.name+" - "+lesson.name+" ("+lesson.type + ") @Rs."+lesson.price;
+        return customer.getName()+" - "+lesson.getName()+" ("+lesson.getType() + ") @Rs."+lesson.getPrice();
+    }
+
+    public BookingDay getBookingDay() {
+        return bookingDay;
+    }
+
+    public BookingWeek getBookingWeek() {
+        return bookingWeek;
+    }
+
+    public FitnessLesson getLesson() {
+        return lesson;
+    }
+
+    public Customer getCustomer() {
+        return customer;
     }
 }
