@@ -1,6 +1,7 @@
 package application;
 
 import models.*;
+import utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -405,7 +406,7 @@ public class WFCApp {
             if(b.getLesson().equals(lesson)){
                 bookingCount++;
             }
-            if (bookingCount == 5) {
+            if (bookingCount == Constants.maxCustomersPerLesson) {
                 System.out.println("Lesson is Full");
                 return false;
             }
@@ -416,7 +417,7 @@ public class WFCApp {
         for (DailyBooking b : bookings){
             if(b.getBookingWeek() == week && day == b.getBookingDay() && b.getLesson().equals(lesson)){
                 bookingCount++;
-            }else if (bookingCount == 2) {
+            }else if (bookingCount == Constants.maxLessonsPerDay) {
                 System.out.println("Booking for "+lesson.getName()+" is Full on " + day + " - "+week);
                 return false;
             }

@@ -3,11 +3,12 @@ package models;
 import java.util.Objects;
 
 public class Customer {
-    private final String name;
-    private final String address;
-    private final String phone; //it will be uniquely identifier
-    private final int weight;
-    private final int age;
+    private String name;
+    private String address;
+    private String phone; //it will be uniquely identifier
+    private int weight;
+    private int age;
+
 
     public Customer(String name, String address, String phone, int weight, int age) {
         this.name = name;
@@ -35,6 +36,25 @@ public class Customer {
 
     public int getAge() {
         return age;
+    }
+    public void setAge(int age){
+        this.age = age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
     }
 
     @Override
