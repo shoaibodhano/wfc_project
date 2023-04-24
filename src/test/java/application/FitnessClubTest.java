@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-class WFCAppTest {
+class FitnessClubTest {
 
 
 
     @Test
     void testLogin() {
-        WFCApp.customers.add(new Customer("Shoaib", "Jamshoro", "03000838330", 3, 1));
-        assertFalse(WFCApp.login("03023634694"));
-        assertTrue(WFCApp.login("03000838330"));
+        FitnessClub club= new FitnessClub();
+        club.customers.add(new Customer("Shoaib", "Jamshoro", "03000838330", 3, 1));
+        assertFalse(club.login("03023634694"));
+        assertTrue(club.login("03000838330"));
     }
 
 
@@ -48,16 +48,21 @@ class WFCAppTest {
 
     @Test
     void testRateLesson() {
-        // TODO: This test is incomplete.
+        FitnessClub club= new FitnessClub();
+        FitnessLesson lesson = new FitnessLesson(FitnessType.SPIN, "Lesson-1", new ArrayList<>());
+        assertEquals("No Reviews", club.ratings.get(lesson.getType()).toString());
 
-        WFCApp.rateLesson(new FitnessLesson(FitnessType.SPIN, "Name", new ArrayList<>()));
+        club.addRating(lesson, 4);
+        club.addRating(lesson, 5);
+        assertEquals("4.5 (2)", club.ratings.get(lesson.getType()).toString());
+
     }
 
 
     @Test
     void testShowAvailableLessons() {
 
-        WFCApp.showAvailableLessons(BookingDay.Saturday);
+        new FitnessClub().showAvailableLessons(BookingDay.Saturday);
     }
 
 
@@ -65,7 +70,7 @@ class WFCAppTest {
     @Test
     void testCanBookLesson() {
 
-        assertTrue(WFCApp.canBookLesson(new FitnessLesson(FitnessType.SPIN, "Name", new ArrayList<>()), BookingDay.Saturday,
+        assertTrue(new FitnessClub().canBookLesson(new FitnessLesson(FitnessType.SPIN, "Name", new ArrayList<>()), BookingDay.Saturday,
                 BookingWeek.Week1));
     }
 
@@ -73,7 +78,7 @@ class WFCAppTest {
     @Disabled("TODO: This test is incomplete")
     void testCanBookLesson2() {
 
-        WFCApp.canBookLesson(null, BookingDay.Saturday, BookingWeek.Week1);
+        new FitnessClub().canBookLesson(null, BookingDay.Saturday, BookingWeek.Week1);
     }
 
 
@@ -82,16 +87,18 @@ class WFCAppTest {
         FitnessLesson lesson = new FitnessLesson(FitnessType.SPIN, "Lesson-1", new ArrayList<>());
         Customer customer = new Customer("Shoaib", "Jamshoro", "03146326346", 3, 1);
 
-        assertTrue(WFCApp.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
+        assertTrue(new FitnessClub().bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
     }
 
     @Test
     void testBookLesson2() {
+        FitnessClub club= new FitnessClub();
+
         FitnessLesson lesson = new FitnessLesson(FitnessType.SPIN, "Lesson-1", new ArrayList<>());
         Customer customer = new Customer("Shoaib", "Jamshoro", "03000838330", 3, 1);
 
-        assertTrue(WFCApp.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
-        assertFalse(WFCApp.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
+        assertTrue(club.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
+        assertFalse(club.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
     }
 
 
@@ -99,20 +106,21 @@ class WFCAppTest {
 
     @Test
     void testIsAlreadyLessonBooked() {
+        FitnessClub club= new FitnessClub();
 
         FitnessLesson lesson = new FitnessLesson(FitnessType.SPIN, "Lesson-1", new ArrayList<>());
         Customer customer = new Customer("Shoaib", "Jamshoro", "03000838330", 3, 1);
 
-        WFCApp.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1);
+        club.bookLesson(lesson, customer, BookingDay.Saturday, BookingWeek.Week1);
 
-        assertTrue(WFCApp.isAlreadyLessonBooked(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
+        assertTrue(club.isAlreadyLessonBooked(lesson, customer, BookingDay.Saturday, BookingWeek.Week1));
     }
 
     @Test
     void testIsAlreadyLessonBooked2() {
         FitnessLesson lesson = new FitnessLesson(FitnessType.YOGA, "Name", new ArrayList<>());
 
-        assertFalse(WFCApp.isAlreadyLessonBooked(lesson, new Customer("Name", "42 Main St", "4105551212", 3, 1),
+        assertFalse(new FitnessClub().isAlreadyLessonBooked(lesson, new Customer("Name", "42 Main St", "4105551212", 3, 1),
                 BookingDay.Saturday, BookingWeek.Week1));
     }
 

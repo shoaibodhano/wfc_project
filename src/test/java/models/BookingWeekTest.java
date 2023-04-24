@@ -16,7 +16,7 @@ class BookingWeekTest {
     @Test
     void testValues() {
         BookingWeek[] actualValuesResult = BookingWeek.values();
-        assertEquals(4, actualValuesResult.length);
+        assertEquals(8, actualValuesResult.length);
         assertEquals(BookingWeek.Week1, actualValuesResult[0]);
         assertEquals(BookingWeek.Week2, actualValuesResult[1]);
         assertEquals(BookingWeek.Week3, actualValuesResult[2]);

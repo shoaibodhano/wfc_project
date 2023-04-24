@@ -3,57 +3,29 @@ package application;
 import models.*;
 import utils.Constants;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
 import static models.BookingDay.*;
-import static models.BookingWeek.*;
 
-public class WFCApp {
+public class FitnessClub {
 
-    static ArrayList<DailyBooking> bookings = new ArrayList<>();
-    static ArrayList<DailyBooking> userBookings = new ArrayList<>();
-    static ArrayList<Customer> customers = new ArrayList<>();
-    static Customer currentUser;
+    ArrayList<DailyBooking> bookings = new ArrayList<>();
+    ArrayList<DailyBooking> userBookings = new ArrayList<>();
+    ArrayList<Customer> customers = new ArrayList<>();
+    Customer currentUser;
 
-    static ArrayList<FitnessLesson> lessons = new ArrayList<>();
-    static ArrayList<FitnessLesson> filteredLessons = new ArrayList<>();
+    ArrayList<FitnessLesson> lessons = new ArrayList<>();
+    ArrayList<FitnessLesson> filteredLessons = new ArrayList<>();
 
-    public static void main(String[] args) {
-        initData();
+    Map<FitnessType, Rating> ratings = new HashMap<>();
 
-        int choice;
-
-        while(true) {
-
-            System.out.println("Select Your Choice:");
-
-            System.out.println("1. Login");
-//            System.out.println("2. Print Report");
-            System.out.println("0. Exit");
-            choice = getChoice();
-//            choice = 1;
-
-            if (choice==1){
-                System.out.println("Enter Your Phone Number: ");
-                String phone = "03000838330";System.out.println("03000838330");
-//                String phone = in.next();
-                if (login(phone)){
-                    start();
-                }
-//            } else if (choice==2){
-//                printReport();
-            } else if (choice==0){
-                System.exit(0);
-            } else {
-                System.out.println("Invalid Choice\n");
-            }
+    public FitnessClub(){
+        for (FitnessType fitnessType : FitnessType.values()) {
+            ratings.put(fitnessType, new Rating());
         }
     }
 
-    public static int getChoice(){
+    public int getChoice(){
         try {
             return new Scanner(System.in).nextInt();
         }catch (Exception e){
@@ -62,7 +34,7 @@ public class WFCApp {
     }
 
 
-    public static boolean login(String phone){
+    public boolean login(String phone){
         for (Customer c : customers) {
             if (c.getPhone().equals(phone)) {
                 currentUser = c;
@@ -74,7 +46,7 @@ public class WFCApp {
 
 
 
-    public static void start(){
+    public void start(){
 
         System.out.println("Hello "+currentUser.getName()+" !");
         System.out.println("─────────────[ Welcome to Weekend Fitness Club ]─────────────");
@@ -160,12 +132,8 @@ public class WFCApp {
     }
 
 
-
-
-
-
     // Done
-    static void cancelABooking(){
+    void cancelABooking(){
         ArrayList<DailyBooking> pendingBookings = new ArrayList<>();
         for (DailyBooking b : userBookings) {
             if (!b.isAttended())
@@ -193,7 +161,7 @@ public class WFCApp {
 
     }
 
-    static void changeABooking(){
+    void changeABooking(){
         ArrayList<DailyBooking> pendingBookings = new ArrayList<>();
         for (DailyBooking b : userBookings) {
             if (!b.isAttended())
@@ -256,7 +224,7 @@ public class WFCApp {
     }
 
     // Done
-    static void attendALesson(){
+    void attendALesson(){
         ArrayList<DailyBooking> pendingBookings = new ArrayList<>();
         for (DailyBooking b : userBookings) {
             if (!b.isAttended())
@@ -285,18 +253,28 @@ public class WFCApp {
 
     }
 
-    static void rateLesson(FitnessLesson l){
+    void rateLesson(FitnessLesson l){
+        System.out.println("How satisfied You with "+l.getType());
 
-        //TODO implement it.
-        System.out.println("Rate the "+l.toString().split("\n")[0]);
+        System.out.println("1. Very Dissatisfied");
+        System.out.println("2. Dissatisfied");
+        System.out.println("3. OK");
+        System.out.println("4. Satisfied");
+        System.out.println("5. Very Satisfied");
+        System.out.println("0. I will do it later");
 
+        int rate =  getChoice();
+        if(rate > 0 && rate <6) {
+            ratings.get(l.getType()).addCustomerRating(rate);
+            System.out.println("Thank you for Your Feedback (:\n");
+        }
     }
 
     // Done
-    static void showAvailableLessons(BookingDay day){
+    void showAvailableLessons(BookingDay day){
         filteredLessons.clear();
         for (FitnessLesson l : lessons) {
-            if (l.isOpenOn(day)) {
+             if (l.isOpenOn(day)) {
                 filteredLessons.add(l);
                 System.out.println(filteredLessons.size()+". "+l.toString().replaceAll("\n","\t"));
             }
@@ -304,7 +282,7 @@ public class WFCApp {
     }
 
     // Done
-    static void showAvailableLessons(FitnessType fitnessType){
+    void showAvailableLessons(FitnessType fitnessType){
         filteredLessons.clear();
         for (FitnessLesson l : lessons) {
             if (l.getType() == fitnessType) {
@@ -314,18 +292,18 @@ public class WFCApp {
         }
     }
 
-    static void selectLessonToBook(DailyBooking currentBooking){
+    void selectLessonToBook(DailyBooking currentBooking){
         System.out.println("\nSelect a Lesson to Book\n");
         int choice = getChoice();
         if(choice > 0 && choice <= filteredLessons.size()) {
             FitnessLesson lesson = filteredLessons.get(choice-1);
             System.out.println("Select Week:");
-            System.out.println("1. Week-1");
-            System.out.println("2. Week-2");
-            System.out.println("3. Week-3");
-            System.out.println("4. Week-4");
+
+            for(int i = 0; i<BookingWeek.values().length ; i++) {
+                System.out.println((i+1)+". Week-" + (i + 1));
+            }
             choice = getChoice();
-            if (choice<=4 && choice>=1){
+            if (choice<=(BookingWeek.values().length) && choice>=1){
                 BookingWeek week = BookingWeek.values()[choice-1];
                 System.out.println("Select Day:");
                 System.out.println("1. Saturday");
@@ -344,9 +322,10 @@ public class WFCApp {
                         System.out.println("1. Yes");
                         System.out.println("2. No");
                         choice = getChoice();
-                        if (choice==1)
-                            bookings.get(bookings.size()-1).attend();
-                        else if(choice!=2){
+                        if (choice==1) {
+                            bookings.get(bookings.size() - 1).attend();
+                            rateLesson(lesson);
+                        } else if (choice!=2){
                             System.out.println("Invalid choice...!\n");
                         }
                     }
@@ -361,46 +340,28 @@ public class WFCApp {
         }
     }
 
+    void printReport(){
+        int totalWeeks = BookingWeek.values().length;
 
-    static void printReport(){
-        System.out.println("────────────────────────[ 4 Week Report ]────────────────────────");
-
-//        bookings.sort(Comparator.comparing(o -> o.bookingWeek.toString()));
+        System.out.println("────────────────────────[ " + totalWeeks + " Week Report ]────────────────────────");
 
         int totalEarning=0;
-        System.out.println("Week-1");
-        for (DailyBooking b : bookings) {
-            if (b.getBookingWeek() == Week1 && b.isAttended()) {
-                System.out.println(b.getReport());
-                totalEarning+=b.getLesson().getPrice();
+
+        for(int i = 0; i<totalWeeks ; i++) {
+            System.out.println("Week-"+(i+1));
+            for (DailyBooking b : bookings) {
+                if (b.getBookingWeek() == BookingWeek.values()[i] && b.isAttended()) {
+                    System.out.println(b.getReport());
+                    totalEarning += b.getLesson().getPrice();
+                }
             }
         }
-        System.out.println("Week-2");
-        for (DailyBooking b : bookings) {
-            if (b.getBookingWeek() == Week2 && b.isAttended()) {
-                System.out.println(b.getReport());
-                totalEarning+=b.getLesson().getPrice();
-            }
-        }
-        System.out.println("Week-3");
-        for (DailyBooking b : bookings) {
-            if (b.getBookingWeek() == Week3 && b.isAttended()) {
-                System.out.println(b.getReport());
-                totalEarning+=b.getLesson().getPrice();
-            }
-        }
-        System.out.println("Week-4");
-        for (DailyBooking b : bookings) {
-            if (b.getBookingWeek() == Week4 && b.isAttended()) {
-                System.out.println(b.getReport());
-                totalEarning+=b.getLesson().getPrice();
-            }
-        }
-        System.out.println("\nTotal Income of 4 Weeks = Rs."+totalEarning+'\n');
+
+        System.out.println("\nTotal Income of " + totalWeeks + " Weeks = Rs."+totalEarning+'\n');
 
     }
 
-    static boolean canBookLesson(FitnessLesson lesson, BookingDay day, BookingWeek week){
+    boolean canBookLesson(FitnessLesson lesson, BookingDay day, BookingWeek week){
         int bookingCount = 0;
         for (DailyBooking b : bookings){
             if(b.getLesson().equals(lesson)){
@@ -426,7 +387,7 @@ public class WFCApp {
         return true;
     }
 
-    static boolean bookLesson(FitnessLesson lesson, Customer customer, BookingDay day, BookingWeek week){
+    boolean bookLesson(FitnessLesson lesson, Customer customer, BookingDay day, BookingWeek week){
         if(canBookLesson(lesson, day, week)){
             if(isAlreadyLessonBooked(lesson, customer, day, week)){
                 System.out.println("This Lesson is Already booked");
@@ -438,7 +399,7 @@ public class WFCApp {
         return false;
     }
 
-    static boolean isAlreadyLessonBooked(FitnessLesson lesson, Customer customer, BookingDay day, BookingWeek week){
+    boolean isAlreadyLessonBooked(FitnessLesson lesson, Customer customer, BookingDay day, BookingWeek week){
         for (DailyBooking b : bookings){
             if(b.getCustomer().equals(customer) && b.getLesson().equals(lesson) && day == b.getBookingDay() && week == b.getBookingWeek())
                 return true;
@@ -446,7 +407,7 @@ public class WFCApp {
         return false;
     }
 
-    static void viewUserBookings(Customer customer){
+    void viewUserBookings(Customer customer){
         userBookings.clear();
         for (DailyBooking b:bookings) {
             if(b.getCustomer().getPhone().equals(customer.getPhone())){
@@ -456,67 +417,24 @@ public class WFCApp {
     }
 
 
-
-    private static void initData(){
-        lessons.add(new FitnessLesson(FitnessType.YOGA,"Lesson-1", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.ZUMBA,"Lesson-2", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.SPIN,"Lesson-3", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.BODY_SCULPT,"Lesson-4", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.YOGA,"Lesson-5", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.SPIN,"Lesson-6", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.ZUMBA,"Lesson-7", Arrays.asList(Saturday, Sunday)));
-        lessons.add(new FitnessLesson(FitnessType.AQUACISE,"Lesson-8", Arrays.asList(Saturday, Sunday)));
-
-        customers.add(new Customer("Shoaib", "Hyderabad", "03123934654", 71, 25));
-        customers.add(new Customer("Amjad", "Hyderabad", "03000838330", 68, 27));
-        customers.add(new Customer("Majid", "Hyderabad", "03029142318", 69, 26));
-        customers.add(new Customer("Bilal", "Hyderabad", "03203538328", 86, 32));
-        customers.add(new Customer("Faraz", "Bandhi", "03081324743", 79, 23));
-        customers.add(new Customer("Fahad", "Bandhi", "0300907634", 95, 35));
-        customers.add(new Customer("Aftab", "Kotri", "03002335464", 127, 29));
-        customers.add(new Customer("Rafi", "Jamshoro", "03049464839", 77, 26));
-        customers.add(new Customer("Shahbaz", "Jamshoro", "03343852729", 72, 28));
-        customers.add(new Customer("Zohaib", "Latifabad", "03253264937", 69, 24));
-
-
-
-        boolean isBooked;
-
-        //Bookings for Saturday
-        isBooked = bookLesson(lessons.get(0), customers.get(0), Saturday, Week1);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(0), customers.get(1), Saturday, Week1);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(1), customers.get(4), Saturday, Week4);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(2), customers.get(5), Saturday, Week2);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(5), customers.get(6), Saturday, Week3);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(4), customers.get(7), Saturday, Week4);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(1), customers.get(9), Saturday, Week3);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-
-        //Bookings for Sunday
-        isBooked = bookLesson(lessons.get(3), customers.get(0), Sunday, Week1);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(1), customers.get(1), Sunday, Week1);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(3), customers.get(2), Sunday, Week2);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(7), customers.get(3), Sunday, Week3);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(5), customers.get(4), Sunday, Week4);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(6), customers.get(5), Sunday, Week2);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(4), customers.get(6), Sunday, Week3);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-        isBooked = bookLesson(lessons.get(5), customers.get(1), Sunday, Week4);
-        if(isBooked) bookings.get(bookings.size()-1).attend();
-
-
-
+    void addLesson(FitnessLesson lesson){
+        lessons.add(lesson);
     }
+
+    void addCustomer(Customer customer){
+        customers.add(customer);
+    }
+
+
+    public DailyBooking getLastBooking(){
+        if (bookings.size() == 0){
+            return null;
+        }
+        return bookings.get(bookings.size()-1);
+    }
+
+    void addRating(FitnessLesson lesson, int rating){
+        ratings.get(lesson.getType()).addCustomerRating(rating);
+    }
+
 }

@@ -1,31 +1,25 @@
 package models;
 
-public class Rating {
-    private final FitnessLesson lesson;
-    private final Customer customer;
-    private final int rating;
+import java.text.DecimalFormat;
 
-    public Rating(FitnessLesson lesson, Customer customer, int rating) {
-        this.lesson = lesson;
-        this.customer = customer;
-        this.rating = rating;
-    }
+public class Rating {
+    private int noOfRating=0;
+    private double totalRating=0;
 
     @Override
     public String toString() {
-        String satisfaction = "";
-        switch (rating){
-            case 1: satisfaction = "Very Dissatisfied"; break;
-            case 2: satisfaction = "Dissatisfied"; break;
-            case 3: satisfaction = "OK"; break;
-            case 4: satisfaction = "Satisfied"; break;
-            case 5: satisfaction = "Very Satisfied"; break;
-        }
-        return  customer.getName()+ " is " + satisfaction + " with " + lesson.getType();
+
+        if (noOfRating==0) return "No Reviews";
+        String r = new DecimalFormat("#.#").format(totalRating /noOfRating);
+        return  r + " (" + noOfRating + ")";
     }
 
 
 
+    public void addCustomerRating(int rating){
+        this.totalRating += rating;
+        this.noOfRating++;
+    }
 
 }
 
